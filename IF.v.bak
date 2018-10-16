@@ -1,0 +1,12 @@
+module IF(clk, rst, pc_out, intsruction);
+
+input clk, rst;
+output reg[31:0] pc_out;
+output[31:0] instruction;
+
+always@(posedge clk,rst)begin
+	if(rst) pc_out <= 32'b0;
+	else pc_out <= pc_out + 32'd4;
+end
+
+endmodule
