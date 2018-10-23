@@ -5,8 +5,8 @@
 // Permission:
 //
 //   Terasic grants permission to use and modify this code for use
-//   in synthesis for all Terasic Development Boards and Altera Development 
-//   Kits made by Terasic.  Other use of this code, including the selling 
+//   in synthesis for all Terasic Development Boards and Altera Development
+//   Kits made by Terasic.  Other use of this code, including the selling
 //   ,duplication, or modification of any portion is strictly prohibited.
 //
 // Disclaimer:
@@ -15,11 +15,11 @@
 //   which illustrates how these types of functions can be implemented.
 //   It is the user's responsibility to verify their design for
 //   consistency and functionality through the use of formal
-//   verification methods.  Terasic provides no warranty regarding the use 
+//   verification methods.  Terasic provides no warranty regarding the use
 //   or functionality of this code.
 //
 // ============================================================================
-//           
+//
 //  Terasic Technologies Inc
 //  9F., No.176, Sec.2, Gongdao 5th Rd, East Dist, Hsinchu City, 30070. Taiwan
 //
@@ -39,7 +39,7 @@
 //   Ver  :| Author            :| Mod. Date :| Changes Made:
 //   V1.0 :| Johnny Chen       :| 05/08/19  :|      Initial Revision
 //   V1.1 :| Johnny Chen       :| 05/11/16  :|      Added FLASH Address FL_ADDR[21:20]
-//   V1.2 :| Johnny Chen       :| 05/11/16  :|		Fixed ISP1362 INT/DREQ Pin Direction.   
+//   V1.2 :| Johnny Chen       :| 05/11/16  :|		Fixed ISP1362 INT/DREQ Pin Direction.
 //   V1.3 :| Johnny Chen       :| 06/11/16  :|		Added the Dedicated TV Decoder Line-Locked-Clock Input
 //													            for DE2 v2.X PCB.
 //   V1.5 :| Eko    Yan        :| 12/01/30  :|      Update to version 11.1 sp1.
@@ -47,7 +47,7 @@
 
 module MIPS
 	(
-		////////////////////	Clock Input	 	////////////////////	 
+		////////////////////	Clock Input	 	////////////////////
 		CLOCK_27,						//	27 MHz
 		CLOCK_50,						//	50 MHz
 		EXT_CLOCK,						//	External Clock
@@ -76,7 +76,7 @@ module MIPS
 		/////////////////////	SDRAM Interface		////////////////
 		DRAM_DQ,						//	SDRAM Data bus 16 Bits
 		DRAM_ADDR,						//	SDRAM Address bus 12 Bits
-		DRAM_LDQM,						//	SDRAM Low-byte Data Mask 
+		DRAM_LDQM,						//	SDRAM Low-byte Data Mask
 		DRAM_UDQM,						//	SDRAM High-byte Data Mask
 		DRAM_WE_N,						//	SDRAM Write Enable
 		DRAM_CAS_N,						//	SDRAM Column Address Strobe
@@ -96,8 +96,8 @@ module MIPS
 		////////////////////	SRAM Interface		////////////////
 		SRAM_DQ,						//	SRAM Data bus 16 Bits
 		SRAM_ADDR,						//	SRAM Address bus 18 Bits
-		SRAM_UB_N,						//	SRAM High-byte Data Mask 
-		SRAM_LB_N,						//	SRAM Low-byte Data Mask 
+		SRAM_UB_N,						//	SRAM High-byte Data Mask
+		SRAM_LB_N,						//	SRAM Low-byte Data Mask
 		SRAM_WE_N,						//	SRAM Write Enable
 		SRAM_CE_N,						//	SRAM Chip Enable
 		SRAM_OE_N,						//	SRAM Output Enable
@@ -125,7 +125,7 @@ module MIPS
 		LCD_DATA,						//	LCD Data bus 8 bits
 		////////////////////	SD_Card Interface	////////////////
 		//SD_DAT,							//	SD Card Data
-		//SD_WP_N,						   //	SD Write protect 
+		//SD_WP_N,						   //	SD Write protect
 		//SD_CMD,							//	SD Card Command Signal
 		//SD_CLK,							//	SD Card Clock
 		////////////////////	USB JTAG link	////////////////////
@@ -204,7 +204,7 @@ output  [17:0]	LEDR;					//	LED Red[17:0]
 ///////////////////////		SDRAM Interface	////////////////////////
 inout	  [15:0]	DRAM_DQ;				//	SDRAM Data bus 16 Bits
 output  [11:0]	DRAM_ADDR;				//	SDRAM Address bus 12 Bits
-output			DRAM_LDQM;				//	SDRAM Low-byte Data Mask 
+output			DRAM_LDQM;				//	SDRAM Low-byte Data Mask
 output			DRAM_UDQM;				//	SDRAM High-byte Data Mask
 output			DRAM_WE_N;				//	SDRAM Write Enable
 output			DRAM_CAS_N;				//	SDRAM Column Address Strobe
@@ -224,8 +224,8 @@ output			FL_CE_N;				//	FLASH Chip Enable
 ////////////////////////	SRAM Interface	////////////////////////
 inout	 [15:0]	SRAM_DQ;				//	SRAM Data bus 16 Bits
 output [17:0]	SRAM_ADDR;				//	SRAM Address bus 18 Bits
-output			SRAM_UB_N;				//	SRAM High-byte Data Mask 
-output			SRAM_LB_N;				//	SRAM Low-byte Data Mask 
+output			SRAM_UB_N;				//	SRAM High-byte Data Mask
+output			SRAM_LB_N;				//	SRAM Low-byte Data Mask
 output			SRAM_WE_N;				//	SRAM Write Enable
 output			SRAM_CE_N;				//	SRAM Chip Enable
 output			SRAM_OE_N;				//	SRAM Output Enable
@@ -318,17 +318,18 @@ wire[31:0] instruction_out;
 reg[6:0] sevenSeg[15:0];
 
 wire ID_WB_Write_Enable1;
-wire[4:0] ID_WB_Dest1;
-wire[31:0] ID_WB_Data1;
-wire[4:0] ID_Dest1;
-wire[31:0] ID_Reg2_1;
-wire[31:0] ID_Val2_1; 
-wire[31:0] ID_Val1_1;
-wire[3:0] ID_EXE_CMD1;
-wire ID_MEM_R_EN1;
-wire ID_MEM_W_EN1;
-wire ID_WB_EN1;
-wire[1:0] ID_Branch_Type1;
+wire[4:0] ID_WB_Dest1, ID_WB_Dest2;
+wire[31:0] ID_WB_Data1, ID_WB_Data2;
+wire[4:0] ID_Dest1, ID_Dest2;
+wire[31:0] ID_Reg2_1, ID_Reg2_2;
+wire[31:0] ID_Val2_1, ID_Val2_2;
+wire[31:0] ID_Val1_1, ID_Val1_2;
+wire[3:0] ID_EXE_CMD1, ID_EXE_CMD2;
+wire ID_MEM_R_EN1, ID_MEM_R_EN2;
+wire ID_MEM_W_EN1, ID_MEM_W_EN2;
+wire ID_WB_EN1, ID_WB_EN2;
+wire[1:0] ID_Branch_Type1, ID_Branch_Type2;
+wire Flush = 1'b0; // must change
 
 initial begin
 	sevenSeg[0] = 7'b1000000;
@@ -350,11 +351,15 @@ initial begin
 end
 
 IF_Stage IF(CLOCK_50, SW[0], pc_IF, instruction);
-IF_Stage_reg IF_reg(CLOCK_50, SW[0], pc_IF, instruction, pc_ID1, instruction_out);
+IF_Stage_reg IF_reg(CLOCK_50, SW[0], Flush, pc_IF, instruction, pc_ID1, instruction_out);
 
 ID_Stage ID(CLOCK_50, SW[0], instruction_out, ID_WB_Write_Enable, ID_WB_Dest, ID_WB_Data,
-				ID_Dest1, ID_Reg2_1, ID_Val2_1, ID_Val1_1, ID_EXE_CMD1, ID_MEM_R_EN1, ID_MEM_W_EN1, ID_WB_EN1, ID_Branch_Type1);
-ID_Stage_reg ID_reg(CLOCK_50, SW[0], pc_ID2, pc_EXE1);
+				ID_Dest1, ID_Reg2_1, ID_Val2_1, ID_Val1_1, ID_EXE_CMD1, ID_MEM_R_EN1, ID_MEM_W_EN1,
+				ID_WB_EN1, ID_Branch_Type1);
+ID_Stage_reg ID_reg(CLOCK_50, SW[0], Flush, ID_Dest1, ID_Reg2_1, ID_Val2_1, ID_Val1_1, pc_ID1,
+				ID_EXE_CMD1, ID_MEM_R_EN1, ID_MEM_W_EN1, ID_WB_EN1, ID_Branch_Type1,
+				ID_Dest2, ID_Reg2_2, ID_Val2_2, ID_Val1_2, pc_ID2, ID_EXE_CMD2,
+				ID_MEM_R_EN2, ID_MEM_W_EN2, ID_WB_EN2, ID_Branch_Type2);
 
 EXE_Stage EXE(CLOCK_50, SW[0], pc_EXE1, pc_EXE2);
 EXE_Stage_reg EXE_reg(CLOCK_50, SW[0], pc_EXE2, pc_MEM1);
