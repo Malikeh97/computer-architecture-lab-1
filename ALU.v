@@ -2,8 +2,8 @@ module ALU(
   input[31:0] in1,
   input[31:0] in2,
   input[3:0] cmd,
-  output[31:0] result
-  );
+  output reg[31:0] result
+);
 
   parameter [3:0] NOP = 4'bxxxx,
                   ADD = 4'b0000,
@@ -22,9 +22,9 @@ module ALU(
                   ST = 4'b0000,
                   BEZ = 4'bxxxx,
                   BNE = 4'bxxxx,
-                  JMP = 4'bxxxx
+                  JMP = 4'bxxxx;
 
-always@(cmd)begin
+always @(cmd) begin
   case(cmd)
    ADD: result <= in1 + in2;
    SUB: result <= in1 - in2;

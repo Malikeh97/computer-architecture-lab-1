@@ -302,9 +302,7 @@ input          TD_CLK27;            //	TV Decoder 27MHz CLK
 inout	[35:0]	GPIO_0;					//	GPIO Connection 0
 inout	[35:0]	GPIO_1;					//	GPIO Connection 1
 
-wire[31:0] pc_IF;
-wire[31:0] pc_ID1;
-wire[31:0] pc_ID2;
+wire[31:0] pc_IF, pc_ID, pc_EXE;
 wire[31:0] pc_EXE1;
 wire[31:0] pc_EXE2;
 wire[31:0] pc_MEM1;
@@ -318,18 +316,22 @@ wire[31:0] instruction_out;
 reg[6:0] sevenSeg[15:0];
 
 wire ID_WB_Write_Enable1;
-wire[4:0] ID_WB_Dest1, ID_WB_Dest2;
-wire[31:0] ID_WB_Data1, ID_WB_Data2;
-wire[4:0] ID_Dest1, ID_Dest2;
-wire[31:0] ID_Reg2_1, ID_Reg2_2;
-wire[31:0] ID_Val2_1, ID_Val2_2;
-wire[31:0] ID_Val1_1, ID_Val1_2;
-wire[3:0] ID_EXE_CMD1, ID_EXE_CMD2;
-wire ID_MEM_R_EN1, ID_MEM_R_EN2;
-wire ID_MEM_W_EN1, ID_MEM_W_EN2;
-wire ID_WB_EN1, ID_WB_EN2;
-wire[1:0] ID_Branch_Type1, ID_Branch_Type2;
+wire[4:0] ID_WB_Dest;
+wire[31:0] ID_WB_Data;
+wire[4:0] ID_Dest, EXE_Dest;
+wire[31:0] ID_Reg2, EXE_Reg2;
+wire[31:0] ID_Val2, EXE_Val2;
+wire[31:0] ID_Val1, EXE_Val1;
+wire[3:0] ID_EXE_CMD, EXE_EXE_CMD;
+wire ID_MEM_R_EN, EXE_MEM_R_EN;
+wire ID_MEM_W_EN, EXE_MEM_W_EN;
+wire ID_WB_EN, EXE_WB_EN;
+wire[1:0] ID_Branch_Type, EXE_Branch_Type;
 wire Flush = 1'b0; // must change
+
+wire[31:0] EXE_ALU_result;
+wire[31:0] EXE_Br_Addr;
+wire EXE_Br_taken;
 
 initial begin
 	sevenSeg[0] = 7'b1000000;
@@ -351,31 +353,23 @@ initial begin
 end
 
 IF_Stage IF(CLOCK_50, SW[0], pc_IF, instruction);
-IF_Stage_reg IF_reg(CLOCK_50, SW[0], Flush, pc_IF, instruction, pc_ID1, instruction_out);
+IF_Stage_reg IF_reg(CLOCK_50, SW[0], Flush, pc_IF, instruction, pc_ID, instruction_out);
 
 ID_Stage ID(CLOCK_50, SW[0], instruction_out, ID_WB_Write_Enable, ID_WB_Dest, ID_WB_Data,
-				ID_Dest1, ID_Reg2_1, ID_Val2_1, ID_Val1_1, ID_EXE_CMD1, ID_MEM_R_EN1, ID_MEM_W_EN1,
-				ID_WB_EN1, ID_Branch_Type1);
-ID_Stage_reg ID_reg(CLOCK_50, SW[0], Flush, ID_Dest1, ID_Reg2_1, ID_Val2_1, ID_Val1_1, pc_ID1,
-				ID_EXE_CMD1, ID_MEM_R_EN1, ID_MEM_W_EN1, ID_WB_EN1, ID_Branch_Type1,
-				ID_Dest2, ID_Reg2_2, ID_Val2_2, ID_Val1_2, pc_ID2, ID_EXE_CMD2,
-				ID_MEM_R_EN2, ID_MEM_W_EN2, ID_WB_EN2, ID_Branch_Type2);
+				ID_Dest, ID_Reg2, ID_Val2, ID_Val1, ID_EXE_CMD, ID_MEM_R_EN, ID_MEM_W_EN,
+				ID_WB_EN, ID_Branch_Type);
+ID_Stage_reg ID_reg(CLOCK_50, SW[0], Flush, ID_Dest, ID_Reg2, ID_Val2, ID_Val1, pc_ID,
+				ID_EXE_CMD, ID_MEM_R_EN, ID_MEM_W_EN, ID_WB_EN, ID_Branch_Type,
+				EXE_Dest, EXE_Reg2, EXE_Val2, EXE_Val1, pc_EXE, EXE_EXE_CMD,
+				EXE_MEM_R_EN, EXE_MEM_W_EN, EXE_WB_EN, EXE_Branch_Type);
 
-EXE_Stage EXE(CLOCK_50, SW[0], pc_EXE1, pc_EXE2);
+EXE_Stage EXE(CLOCK_50, EXE_EXE_CMD, EXE_Val1, EXE_Val2, EXE_Reg2, pc_EXE,
+				EXE_Branch_Type, EXE_ALU_result, EXE_Br_Addr, EXE_Br_taken);
 EXE_Stage_reg EXE_reg(CLOCK_50, SW[0], pc_EXE2, pc_MEM1);
 
 MEM_Stage MEM(CLOCK_50, SW[0], pc_MEM1, pc_MEM2);
 MEM_Stage_reg MEM_reg(CLOCK_50, SW[0], pc_MEM2, pc_WB1);
 
 WB_Stage WB(CLOCK_50, SW[0], pc_WB1, pc_WB2);
-
-assign HEX7 = sevenSeg[ID_Val1_1[31:28]];
-assign HEX6 = sevenSeg[ID_Val1_1[27:24]];
-assign HEX5 = sevenSeg[ID_Val1_1[23:20]];
-assign HEX4 = sevenSeg[ID_Val1_1[19:16]];
-assign HEX3 = sevenSeg[ID_Val1_1[15:12]];
-assign HEX2 = sevenSeg[ID_Val1_1[11:8]];
-assign HEX1 = sevenSeg[ID_Val1_1[7:4]];
-assign HEX0 = sevenSeg[ID_Val1_1[3:0]];
 
 endmodule
