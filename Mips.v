@@ -317,6 +317,19 @@ wire[31:0] instruction_out;
 
 reg[6:0] sevenSeg[15:0];
 
+wire ID_WB_Write_Enable1;
+wire[4:0] ID_WB_Dest1;
+wire[31:0] ID_WB_Data1;
+wire[4:0] ID_Dest1;
+wire[31:0] ID_Reg2_1;
+wire[31:0] ID_Val2_1; 
+wire[31:0] ID_Val1_1;
+wire[3:0] ID_EXE_CMD1;
+wire ID_MEM_R_EN1;
+wire ID_MEM_W_EN1;
+wire ID_WB_EN1;
+wire[1:0] ID_Branch_Type1;
+
 initial begin
 	sevenSeg[0] = 7'b1000000;
 	sevenSeg[1] = 7'b1111001;
@@ -336,21 +349,28 @@ initial begin
 	sevenSeg[15] = 7'b0001110;
 end
 
-IF_Stage IF(KEY[1], SW[0], pc_IF, instruction);
-IF_Stage_reg IF_reg(KEY[1], SW[0], pc_IF, instruction, pc_ID1, instruction_out);
+IF_Stage IF(CLOCK_50, SW[0], pc_IF, instruction);
+IF_Stage_reg IF_reg(CLOCK_50, SW[0], pc_IF, instruction, pc_ID1, instruction_out);
 
-ID_Stage ID(KEY[1], SW[0], pc_ID1, pc_ID2);
-ID_Stage_reg ID_reg(KEY[1], SW[0], pc_ID2, pc_EXE1);
+ID_Stage ID(CLOCK_50, SW[0], instruction_out, ID_WB_Write_Enable, ID_WB_Dest, ID_WB_Data,
+				ID_Dest1, ID_Reg2_1, ID_Val2_1, ID_Val1_1, ID_EXE_CMD1, ID_MEM_R_EN1, ID_MEM_W_EN1, ID_WB_EN1, ID_Branch_Type1);
+ID_Stage_reg ID_reg(CLOCK_50, SW[0], pc_ID2, pc_EXE1);
 
-EXE_Stage EXE(KEY[1], SW[0], pc_EXE1, pc_EXE2);
-EXE_Stage_reg EXE_reg(KEY[1], SW[0], pc_EXE2, pc_MEM1);
+EXE_Stage EXE(CLOCK_50, SW[0], pc_EXE1, pc_EXE2);
+EXE_Stage_reg EXE_reg(CLOCK_50, SW[0], pc_EXE2, pc_MEM1);
 
-MEM_Stage MEM(KEY[1], SW[0], pc_MEM1, pc_MEM2);
-MEM_Stage_reg MEM_reg(KEY[1], SW[0], pc_MEM2, pc_WB1);
+MEM_Stage MEM(CLOCK_50, SW[0], pc_MEM1, pc_MEM2);
+MEM_Stage_reg MEM_reg(CLOCK_50, SW[0], pc_MEM2, pc_WB1);
 
-WB_Stage WB(KEY[1], SW[0], pc_WB1, pc_WB2);
+WB_Stage WB(CLOCK_50, SW[0], pc_WB1, pc_WB2);
 
-assign HEX7 = sevenSeg[instruction_out[24:21]];
-assign HEX3 = sevenSeg[pc_IF[31:2]];
+assign HEX7 = sevenSeg[ID_Val1_1[31:28]];
+assign HEX6 = sevenSeg[ID_Val1_1[27:24]];
+assign HEX5 = sevenSeg[ID_Val1_1[23:20]];
+assign HEX4 = sevenSeg[ID_Val1_1[19:16]];
+assign HEX3 = sevenSeg[ID_Val1_1[15:12]];
+assign HEX2 = sevenSeg[ID_Val1_1[11:8]];
+assign HEX1 = sevenSeg[ID_Val1_1[7:4]];
+assign HEX0 = sevenSeg[ID_Val1_1[3:0]];
 
 endmodule

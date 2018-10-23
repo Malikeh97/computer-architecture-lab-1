@@ -1,1 +1,3 @@
+Info (10281): Verilog HDL Declaration information at ID_Stage.v(9): object "Reg2" differs only in case from object "reg2" in the same scope
 Info (10281): Verilog HDL Declaration information at IF_Stage.v(4): object "PC" differs only in case from object "pc" in the same scope
+Warning (10268): Verilog HDL information at Registers_File.v(24): always construct contains both blocking and non-blocking assignments
