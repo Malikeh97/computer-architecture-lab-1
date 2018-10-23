@@ -1,6 +1,8 @@
 module IF_Stage(
 	input clk,
 	input rst,
+	input Br_tacken,
+	input[31:0] Br_Addr;
 	output[31:0] PC,
 	output[31:0] Instruction
 );
@@ -25,9 +27,11 @@ initial begin
 	ROM[64] = 32'b10101000000000001111111111111111;
 end
 
+assign pc =
+
 always  @(posedge clk, posedge rst)begin
 	if(rst) pc <= 32'b0;
-	else pc <= pc + 32'd4;
+	else pc <= Br_tacken ? Br_Addr: pc + 32'd4;
 end
 
 assign PC = pc;
