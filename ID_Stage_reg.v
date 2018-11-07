@@ -26,28 +26,28 @@ module ID_Stage_reg(
 
 always @(posedge clk) begin
 	if (rst || Flush) begin
-		Dest = 5'b0;
-		Reg2 = 32'b0;
-		Val2 = 32'b0;
-		Val1 = 32'b0;
-		PC_out = 32'b0;
-		EXE_CMD = 4'b0;
-		MEM_R_EN = 1'b0;
-		MEM_W_EN = 1'b0;
-		WB_EN = 1'b0;
-		Branch_Type = 2'b0;
+		Dest <= 5'b0;
+		Reg2 <= 32'b0;
+		Val2 <= 32'b0;
+		Val1 <= 32'b0;
+		PC_out <= 32'b0;
+		EXE_CMD <= 4'b0;
+		MEM_R_EN <= 1'b0;
+		MEM_W_EN <= 1'b0;
+		WB_EN <= 1'b0;
+		Branch_Type <= 2'b0;
 	end
 	else begin
-		Dest = Dest_in;
-		Reg2 = Reg2_in;
-		Val2 = Val2_in;
-		Val1 = Val1_in;
-		PC_out = PC_in;
-		EXE_CMD = EXE_CMD_in;
-		MEM_R_EN = MEM_R_EN_in;
-		MEM_W_EN = MEM_W_EN_in;
-		WB_EN = WB_EN_in;
-		Branch_Type = Branch_Type_in;
+		Dest <= Dest_in;
+		Reg2 <= Reg2_in;
+		Val2 <= Val2_in;
+		Val1 <= Val1_in;
+		PC_out <= PC_in;
+		EXE_CMD <= EXE_CMD_in;
+		MEM_R_EN <= MEM_R_EN_in;
+		MEM_W_EN <= MEM_W_EN_in;
+		WB_EN <= WB_EN_in;
+		Branch_Type <= Branch_Type_in;
 	end
 end
 

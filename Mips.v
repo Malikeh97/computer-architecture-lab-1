@@ -302,7 +302,7 @@ input          TD_CLK27;            //	TV Decoder 27MHz CLK
 inout	[35:0]	GPIO_0;					//	GPIO Connection 0
 inout	[35:0]	GPIO_1;					//	GPIO Connection 1
 
-wire[31:0] pc_IF, pc_ID, pc_EXE;
+wire[31:0] pc_IF, pc_ID, pc_EXE, pc_MEM;
 wire[31:0] pc_EXE1;
 wire[31:0] pc_EXE2;
 wire[31:0] pc_MEM1;
@@ -318,20 +318,23 @@ reg[6:0] sevenSeg[15:0];
 wire ID_WB_Write_Enable1;
 wire[4:0] ID_WB_Dest;
 wire[31:0] ID_WB_Data;
-wire[4:0] ID_Dest, EXE_Dest;
+wire[4:0] ID_Dest, EXE_Dest, MEM_Dest, WB_Dest;
 wire[31:0] ID_Reg2, EXE_Reg2;
 wire[31:0] ID_Val2, EXE_Val2;
 wire[31:0] ID_Val1, EXE_Val1;
 wire[3:0] ID_EXE_CMD, EXE_EXE_CMD;
-wire ID_MEM_R_EN, EXE_MEM_R_EN;
-wire ID_MEM_W_EN, EXE_MEM_W_EN;
-wire ID_WB_EN, EXE_WB_EN;
+wire ID_MEM_R_EN, EXE_MEM_R_EN, MEM_MEM_R_EN, WB_MEM_R_EN;
+wire ID_MEM_W_EN, EXE_MEM_W_EN, MEM_MEM_W_EN;
+wire ID_WB_EN, EXE_WB_EN, MEM_WB_EN, WB_WB_en;
 wire[1:0] ID_Branch_Type, EXE_Branch_Type;
 wire Flush = 1'b0; // must change
 
-wire[31:0] EXE_ALU_result;
+wire[31:0] EXE_ALU_result, MEM_ALU_result, WB_ALU_result;
 wire[31:0] EXE_Br_Addr;
 wire EXE_Br_taken;
+
+wire[31:0] ST_val;
+wire[31:0] MEM_Mem_read_value, WB_Mem_read_value;
 
 initial begin
 	sevenSeg[0] = 7'b1000000;
@@ -365,11 +368,26 @@ ID_Stage_reg ID_reg(CLOCK_50, SW[0], Flush, ID_Dest, ID_Reg2, ID_Val2, ID_Val1, 
 
 EXE_Stage EXE(CLOCK_50, EXE_EXE_CMD, EXE_Val1, EXE_Val2, EXE_Reg2, pc_EXE,
 				EXE_Branch_Type, EXE_ALU_result, EXE_Br_Addr, EXE_Br_taken);
-EXE_Stage_reg EXE_reg(CLOCK_50, SW[0], pc_EXE2, pc_MEM1);
+EXE_Stage_reg EXE_reg(.clk(CLOCK_50), .rst(SW[0]), .WB_en_in(EXE_WB_EN),
+											.MEM_R_EN_in(EXE_MEM_R_EN), .MEM_W_EN_in(EXE_MEM_W_EN),
+											.PC_in(pc_EXE), .ALU_result_in(EXE_ALU_result),
+											.ST_val_in(EXE_Reg2), .Dest_in(EXE_Dest), .WB_en(MEM_WB_EN),
+											.MEM_R_EN(MEM_MEM_R_EN), .MEM_W_EN(MEM_MEM_W_EN), .PC(pc_MEM),
+											.ALU_result(MEM_ALU_result), .ST_val(ST_val), .Dest(MEM_Dest));
 
-MEM_Stage MEM(CLOCK_50, SW[0], pc_MEM1, pc_MEM2);
-MEM_Stage_reg MEM_reg(CLOCK_50, SW[0], pc_MEM2, pc_WB1);
+MEM_Stage MEM(.clk(CLOCK_50), .MEM_R_EN_in(MEM_MEM_R_EN),
+							.MEM_W_EN_in(MEM_MEM_W_EN), .ALU_result_in(MEM_ALU_result),
+							.ST_val(ST_val), .Mem_read_value(MEM_Mem_read_value));
+MEM_Stage_reg MEM_reg(.clk(CLOCK_50), .rst(SW[0]), .WB_en_in(MEM_WB_EN),
+										  .MEM_R_EN_in(MEM_MEM_R_EN), .ALU_result_in(MEM_ALU_result),
+											.Mem_read_value_in(MEM_Mem_read_value), .Dest_in(MEM_Dest),
+											.WB_en(WB_WB_en), .MEM_R_EN(WB_MEM_R_EN),
+											.ALU_result(WB_ALU_result), .Mem_read_value(WB_Mem_read_value),
+											.Dest(WB_Dest));
 
-WB_Stage WB(CLOCK_50, SW[0], pc_WB1, pc_WB2);
+WB_Stage WB(.clk(CLOCK_50), .WB_en_in(WB_WB_en), .MEM_R_EN(WB_MEM_R_EN),
+						.ALU_result(WB_ALU_result), .Mem_read_value(WB_Mem_read_value),
+						.Dest_in(WB_Dest), .WB_en(ID_WB_Write_Enable),
+						.Write_value(ID_WB_Data), .Dest(ID_WB_Dest));
 
 endmodule

@@ -28,26 +28,26 @@ parameter [5:0] NOP = 6'd0,
 					 JMP = 6'd42;
 
 always @(opcode) begin
-	{ Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0;
+	{ Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0;
 	case(opcode)
-		NOP:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'bxxxx000000;
-		ADD:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0000001000;
-		SUB:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0010001000;
-		AND:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0100001000;
-		OR:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0101001000;
-		NOR:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0110001000;
-		XOR:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0111001000;
-		SLA:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b1000001000;
-		SLL:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b1000001000;
-		SRA:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b1001001000;
-		SRL:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b1010001000;
-		ADDI: { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0000001100;
-		SUBI: { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0010001100;
-		LD:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0000100100;
-		ST:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'b0000010100;
-		BEZ:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'bxxxx000101;
-		BNE:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'bxxxx000110;
-		JMP:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } = 10'bxxxx000111;
+		NOP:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'bxxxx000000;
+		ADD:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0000001000;
+		SUB:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0010001000;
+		AND:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0100001000;
+		OR:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0101001000;
+		NOR:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0110001000;
+		XOR:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0111001000;
+		SLA:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b1000001000;
+		SLL:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b1000001000;
+		SRA:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b1001001000;
+		SRL:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b1010001000;
+		ADDI: { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0000001100;
+		SUBI: { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0010001100;
+		LD:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0000100100;
+		ST:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0000010100;
+		BEZ:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'bxxxx000101;
+		BNE:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'bxxxx000110;
+		JMP:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'bxxxx000111;
 	endcase
 end
 
