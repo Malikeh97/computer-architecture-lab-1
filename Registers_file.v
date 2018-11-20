@@ -10,7 +10,7 @@ module Registers_File(
 	output[31:0] reg2
 );
 
-reg[31:0] register[31:0];
+reg[31:0] register[0:31];
 
 integer i;
 
@@ -20,8 +20,8 @@ assign reg2 = register[src2];
 always @(negedge clk, posedge rst) begin
 	if (rst)
 		for(i = 0; i < 32; i = i + 1)
-			register[i] <= i;
-	else if (Write_EN == 1)
+			register[i] <= 32'b0;
+	else if ((Write_EN == 1) & (dest != 0))
 		register[dest] <= Write_Val;
 end
 

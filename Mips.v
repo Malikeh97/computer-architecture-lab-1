@@ -327,7 +327,6 @@ wire ID_MEM_R_EN, EXE_MEM_R_EN, MEM_MEM_R_EN, WB_MEM_R_EN;
 wire ID_MEM_W_EN, EXE_MEM_W_EN, MEM_MEM_W_EN;
 wire ID_WB_EN, EXE_WB_EN, MEM_WB_EN, WB_WB_en;
 wire[1:0] ID_Branch_Type, EXE_Branch_Type;
-wire Flush = 1'b0; // must change
 
 wire[31:0] EXE_ALU_result, MEM_ALU_result, WB_ALU_result;
 wire[31:0] EXE_Br_Addr;
@@ -355,16 +354,16 @@ initial begin
 	sevenSeg[15] = 7'b0001110;
 end
 
-IF_Stage IF(CLOCK_50, SW[0], pc_IF, instruction);
-IF_Stage_reg IF_reg(CLOCK_50, SW[0], Flush, pc_IF, instruction, pc_ID, instruction_out);
+IF_Stage IF(.clk(CLOCK_50), .rst(SW[0]), .Br_taken(EXE_Br_taken) , .Br_Addr(EXE_Br_Addr), .PC(pc_IF), .Instruction(instruction));
+IF_Stage_reg IF_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .PC_in(pc_IF), .Instruction_in(instruction), .PC(pc_ID), .Instruction(instruction_out));
 
-ID_Stage ID(CLOCK_50, SW[0], instruction_out, ID_WB_Write_Enable, ID_WB_Dest, ID_WB_Data,
-				ID_Dest, ID_Reg2, ID_Val2, ID_Val1, ID_EXE_CMD, ID_MEM_R_EN, ID_MEM_W_EN,
-				ID_WB_EN, ID_Branch_Type);
-ID_Stage_reg ID_reg(CLOCK_50, SW[0], Flush, ID_Dest, ID_Reg2, ID_Val2, ID_Val1, pc_ID,
-				ID_EXE_CMD, ID_MEM_R_EN, ID_MEM_W_EN, ID_WB_EN, ID_Branch_Type,
-				EXE_Dest, EXE_Reg2, EXE_Val2, EXE_Val1, pc_EXE, EXE_EXE_CMD,
-				EXE_MEM_R_EN, EXE_MEM_W_EN, EXE_WB_EN, EXE_Branch_Type);
+ID_Stage ID(.clk(CLOCK_50), .rst(SW[0]), .Instruction(instruction_out), .WB_Write_Enable(ID_WB_Write_Enable), .WB_Dest(ID_WB_Dest), .WB_Data(ID_WB_Data),
+				.Dest(ID_Dest), .Reg2(ID_Reg2), .Val2(ID_Val2), .Val1(ID_Val1), .EXE_CMD(ID_EXE_CMD), .MEM_R_EN(ID_MEM_R_EN), .MEM_W_EN(ID_MEM_W_EN),
+				.WB_EN(ID_WB_EN), .Branch_Type(ID_Branch_Type));
+ID_Stage_reg ID_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .Dest_in(ID_Dest), .Reg2_in(ID_Reg2), .Val2_in(ID_Val2), .Val1_in(ID_Val1), .PC_in(pc_ID),
+				.EXE_CMD_in(ID_EXE_CMD), .MEM_R_EN_in(ID_MEM_R_EN), .MEM_W_EN_in(ID_MEM_W_EN), .WB_EN_in(ID_WB_EN), .Branch_Type_in(ID_Branch_Type),
+				.Dest(EXE_Dest), .Reg2(EXE_Reg2), .Val2(EXE_Val2), .Val1(EXE_Val1), .PC_out(pc_EXE), .EXE_CMD(EXE_EXE_CMD),
+				.MEM_R_EN(EXE_MEM_R_EN), .MEM_W_EN(EXE_MEM_W_EN), .WB_EN(EXE_WB_EN), .Branch_Type(EXE_Branch_Type));
 
 EXE_Stage EXE(CLOCK_50, EXE_EXE_CMD, EXE_Val1, EXE_Val2, EXE_Reg2, pc_EXE,
 				EXE_Branch_Type, EXE_ALU_result, EXE_Br_Addr, EXE_Br_taken);

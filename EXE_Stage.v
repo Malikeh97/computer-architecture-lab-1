@@ -12,7 +12,7 @@ module EXE_Stage(
 	output Br_taken
 );
 
-ALU	alu( val1, val2, EXE_CMD, ALU_result);
+ALU alu( val1, val2, EXE_CMD, ALU_result);
 ConditionCheck CC( val1, val_src2, Br_type, Br_taken);
 CalcJumpDest CJD( val2, PC, Br_Addr);
 

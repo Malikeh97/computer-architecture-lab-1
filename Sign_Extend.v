@@ -3,5 +3,5 @@ module Sign_Extend(
   output[31:0] w
 );
 
-assign w = (a[15]) ? {16'b1, a} : {16'b0, a};
+assign w = a[15] ? {16'b1111111111111111, a} : {16'b0, a};
 endmodule

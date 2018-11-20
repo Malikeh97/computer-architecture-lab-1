@@ -24,7 +24,7 @@ module ALU(
                   BNE = 4'bxxxx,
                   JMP = 4'bxxxx;
 
-always @(cmd) begin
+always @(*) begin
   case(cmd)
    ADD: result <= in1 + in2;
    SUB: result <= in1 - in2;

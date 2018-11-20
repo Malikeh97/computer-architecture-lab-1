@@ -43,7 +43,7 @@ always @(opcode) begin
 		SRL:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b1010001000;
 		ADDI: { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0000001100;
 		SUBI: { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0010001100;
-		LD:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0000100100;
+		LD:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0000101100;
 		ST:   { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'b0000010100;
 		BEZ:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'bxxxx000101;
 		BNE:  { Exe_Cmd, mem_read, mem_write, WB_Enable, is_immediate, Branch_Type } <= 10'bxxxx000110;

@@ -22,9 +22,10 @@ wire[31:0] sign_extended_immediate;
 
 assign Val2 = is_immediate ? sign_extended_immediate : reg2;
 assign Dest = is_immediate ? Instruction[20:16] : Instruction[15:11];
+assign Reg2 = reg2;
 
 Control_Unit cu(Instruction[31:26], EXE_CMD, MEM_R_EN, MEM_W_EN, WB_EN, is_immediate, Branch_Type);
-Registers_File rf(clk, rst, Instruction[25:21], Instruction[20:16], Instruction[15:11], WB_Data, WB_Write_Enable, Val1, reg2);
+Registers_File rf(clk, rst, Instruction[25:21], Instruction[20:16], WB_Dest, WB_Data, WB_Write_Enable, Val1, reg2);
 Sign_Extend se(Instruction[15:0], sign_extended_immediate);
 
 endmodule

@@ -7,15 +7,15 @@ module DataMemory(
   output[31:0] Mem_read_value
 );
 
-reg [31:0] mem[63:0];
+reg [31:0] mem[0:63];
 
 //read from memory
-assign Mem_read_value = MEM_R_EN_in ? mem[ mapped_addr[31:2] ] : 32'bx;
+assign Mem_read_value = MEM_R_EN_in ? mem[mapped_addr[31:2]] : 32'bx;
 
 //write in memory
 always @(posedge clk) begin
   if(MEM_W_EN_in) begin
-    mem[ mapped_addr[31:2] ] <= ST_val;
+    mem[mapped_addr[31:2]] <= ST_val;
   end
 end
 
