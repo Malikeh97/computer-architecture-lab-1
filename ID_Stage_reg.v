@@ -12,6 +12,9 @@ module ID_Stage_reg(
 	input MEM_W_EN_in,
 	input WB_EN_in,
 	input[1:0] Branch_Type_in,
+	input is_imm_in,
+	input[4:0] src1_in,
+	input[4:0] src2_in,
 	output reg[4:0] Dest,
 	output reg[31:0] Reg2,
 	output reg[31:0] Val2,
@@ -21,7 +24,10 @@ module ID_Stage_reg(
 	output reg MEM_R_EN,
 	output reg MEM_W_EN,
 	output reg WB_EN,
-	output reg[1:0] Branch_Type
+	output reg[1:0] Branch_Type,
+	output reg is_imm,
+	output reg[4:0] src1,
+	output reg[4:0] src2
 );
 
 always @(posedge clk) begin
@@ -36,6 +42,7 @@ always @(posedge clk) begin
 		MEM_W_EN <= 1'b0;
 		WB_EN <= 1'b0;
 		Branch_Type <= 2'b0;
+		is_imm <= 1'b0;
 	end
 	else begin
 		Dest <= Dest_in;
@@ -48,6 +55,7 @@ always @(posedge clk) begin
 		MEM_W_EN <= MEM_W_EN_in;
 		WB_EN <= WB_EN_in;
 		Branch_Type <= Branch_Type_in;
+		is_imm <= is_imm_in;
 	end
 end
 

@@ -17,7 +17,9 @@ module ID_Stage(
 	output[1:0] Branch_Type,
 	output Is_Immediate,
 	output MEM_W_EN2,
-	output[1:0] Branch_Type2
+	output[1:0] Branch_Type2,
+	output[4:0] src1,
+	output[4:0] src2
 );
 
 wire is_immediate;
@@ -39,6 +41,9 @@ assign Branch_Type = Freeze ? 0 : branch_type;
 assign Is_Immediate = is_immediate;
 assign MEM_W_EN2 = mem_w_en;
 assign Branch_Type2 = branch_type;
+
+assign src1 = Instruction[25:21];
+assign src2 = Instruction[20:16];
 
 Control_Unit cu(Instruction[31:26], exe_cmd, mem_r_en, mem_w_en, wb_en, is_immediate, branch_type);
 Registers_File rf(clk, rst, Instruction[25:21], Instruction[20:16], WB_Dest, WB_Data, WB_Write_Enable, Val1, reg2);
