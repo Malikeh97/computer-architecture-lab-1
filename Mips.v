@@ -362,7 +362,7 @@ IF_Stage_reg IF_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .PC_in(pc
 
 Hazard_Detection_Unit hazard_detection(.src1(instruction_out[25:21]), .src2(instruction_out[20:16]), .Exe_Dest(EXE_Dest),
 																		.Exe_WB_EN(EXE_WB_EN), .Mem_Dest(MEM_Dest), .Mem_WB_EN(MEM_WB_EN),
-																		.is_immediate(is_immediate), .MEM_W_EN(mem_w_en), .Branch_Type(branch_type), .hazard_detected(Freeze));
+																		.is_immediate(is_immediate), .MEM_R_EN(EXE_MEM_R_EN), .MEM_W_EN(mem_w_en), .Branch_Type(branch_type), .forward_en(SW[3]), .hazard_detected(Freeze));
 
 ID_Stage ID(.clk(CLOCK_50), .rst(SW[0]), .Instruction(instruction_out), .WB_Write_Enable(ID_WB_Write_Enable), .WB_Dest(ID_WB_Dest), .WB_Data(ID_WB_Data), .Freeze(Freeze),
 				.Dest(ID_Dest), .Reg2(ID_Reg2), .Val2(ID_Val2), .Val1(ID_Val1), .EXE_CMD(ID_EXE_CMD), .MEM_R_EN(ID_MEM_R_EN), .MEM_W_EN(ID_MEM_W_EN),
