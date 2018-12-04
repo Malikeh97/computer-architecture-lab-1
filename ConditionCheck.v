@@ -13,10 +13,10 @@ parameter [1:0] BEZ = 2'b01,
 always @(val1, val_src2, Br_type) begin
 	Br_taken <= 1'b0;
 	case (Br_type)
-    BEZ: if(val1 == 32'b0) Br_taken <= 1'b1;
-    BNE: if(val1 != val_src2) Br_taken <= 1'b1;
-    JMP: Br_taken <= 1'b1;
-    IDLE: Br_taken <= 1'b0;
+		BEZ: if(val1 == 32'b0) Br_taken <= 1'b1;
+		BNE: if(val1 != val_src2) Br_taken <= 1'b1;
+		JMP: Br_taken <= 1'b1;
+		IDLE: Br_taken <= 1'b0;
   endcase
 end
 endmodule

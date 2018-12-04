@@ -4,6 +4,7 @@ module IF_Stage_reg(
 	input Flush,
 	input[31:0] PC_in,
 	input[31:0] Instruction_in,
+	input Freeze,
 	output reg[31:0] PC,
 	output reg[31:0] Instruction
 );
@@ -13,7 +14,7 @@ always @(posedge clk) begin
 		PC <= 32'b0;
 		Instruction <= 32'b0;
 	end
-	else begin
+	else if (Freeze == 0) begin
 		PC <= PC_in;
 		Instruction <= Instruction_in;
 	end

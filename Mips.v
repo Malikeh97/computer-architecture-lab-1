@@ -335,6 +335,9 @@ wire EXE_Br_taken;
 wire[31:0] ST_val;
 wire[31:0] MEM_Mem_read_value, WB_Mem_read_value;
 
+wire Freeze, is_immediate, mem_w_en;
+wire[1:0] branch_type;
+
 initial begin
 	sevenSeg[0] = 7'b1000000;
 	sevenSeg[1] = 7'b1111001;
@@ -354,12 +357,16 @@ initial begin
 	sevenSeg[15] = 7'b0001110;
 end
 
-IF_Stage IF(.clk(CLOCK_50), .rst(SW[0]), .Br_taken(EXE_Br_taken) , .Br_Addr(EXE_Br_Addr), .PC(pc_IF), .Instruction(instruction));
-IF_Stage_reg IF_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .PC_in(pc_IF), .Instruction_in(instruction), .PC(pc_ID), .Instruction(instruction_out));
+IF_Stage IF(.clk(CLOCK_50), .rst(SW[0]), .Br_taken(EXE_Br_taken) , .Br_Addr(EXE_Br_Addr), .Freeze(Freeze),.PC(pc_IF), .Instruction(instruction));
+IF_Stage_reg IF_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .PC_in(pc_IF), .Instruction_in(instruction), .Freeze(Freeze), .PC(pc_ID), .Instruction(instruction_out));
 
-ID_Stage ID(.clk(CLOCK_50), .rst(SW[0]), .Instruction(instruction_out), .WB_Write_Enable(ID_WB_Write_Enable), .WB_Dest(ID_WB_Dest), .WB_Data(ID_WB_Data),
+Hazard_Detection_Unit hazard_detection(.src1(instruction_out[25:21]), .src2(instruction_out[20:16]), .Exe_Dest(EXE_Dest),
+																		.Exe_WB_EN(EXE_WB_EN), .Mem_Dest(MEM_Dest), .Mem_WB_EN(MEM_WB_EN),
+																		.is_immediate(is_immediate), .MEM_W_EN(mem_w_en), .Branch_Type(branch_type), .hazard_detected(Freeze));
+
+ID_Stage ID(.clk(CLOCK_50), .rst(SW[0]), .Instruction(instruction_out), .WB_Write_Enable(ID_WB_Write_Enable), .WB_Dest(ID_WB_Dest), .WB_Data(ID_WB_Data), .Freeze(Freeze),
 				.Dest(ID_Dest), .Reg2(ID_Reg2), .Val2(ID_Val2), .Val1(ID_Val1), .EXE_CMD(ID_EXE_CMD), .MEM_R_EN(ID_MEM_R_EN), .MEM_W_EN(ID_MEM_W_EN),
-				.WB_EN(ID_WB_EN), .Branch_Type(ID_Branch_Type));
+				.WB_EN(ID_WB_EN), .Branch_Type(ID_Branch_Type), .Is_Immediate(is_immediate), .MEM_W_EN2(mem_w_en), .Branch_Type2(branch_type));
 ID_Stage_reg ID_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .Dest_in(ID_Dest), .Reg2_in(ID_Reg2), .Val2_in(ID_Val2), .Val1_in(ID_Val1), .PC_in(pc_ID),
 				.EXE_CMD_in(ID_EXE_CMD), .MEM_R_EN_in(ID_MEM_R_EN), .MEM_W_EN_in(ID_MEM_W_EN), .WB_EN_in(ID_WB_EN), .Branch_Type_in(ID_Branch_Type),
 				.Dest(EXE_Dest), .Reg2(EXE_Reg2), .Val2(EXE_Val2), .Val1(EXE_Val1), .PC_out(pc_EXE), .EXE_CMD(EXE_EXE_CMD),
