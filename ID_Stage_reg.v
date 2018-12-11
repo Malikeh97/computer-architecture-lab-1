@@ -15,6 +15,7 @@ module ID_Stage_reg(
 	input is_imm_in,
 	input[4:0] src1_in,
 	input[4:0] src2_in,
+	input Freeze,
 	output reg[4:0] Dest,
 	output reg[31:0] Reg2,
 	output reg[31:0] Val2,
@@ -46,7 +47,7 @@ always @(posedge clk) begin
 		src1 <= 5'b0;
 		src2 <= 5'b0;
 	end
-	else begin
+	else if (Freeze == 0) begin
 		Dest <= Dest_in;
 		Reg2 <= Reg2_in;
 		Val2 <= Val2_in;

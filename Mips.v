@@ -335,7 +335,7 @@ wire EXE_Br_taken;
 wire[31:0] ST_val;
 wire[31:0] MEM_Mem_read_value, WB_Mem_read_value;
 
-wire Freeze, is_immediate, is_immediate2, mem_w_en;
+wire Freeze, is_immediate, is_immediate2, mem_w_en, ready;
 wire[1:0] branch_type;
 
 wire[1:0] sel1, sel2, sel3;
@@ -361,8 +361,8 @@ initial begin
 	sevenSeg[15] = 7'b0001110;
 end
 
-IF_Stage IF(.clk(CLOCK_50), .rst(SW[0]), .Br_taken(EXE_Br_taken) , .Br_Addr(EXE_Br_Addr), .Freeze(Freeze),.PC(pc_IF), .Instruction(instruction));
-IF_Stage_reg IF_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .PC_in(pc_IF), .Instruction_in(instruction), .Freeze(Freeze), .PC(pc_ID), .Instruction(instruction_out));
+IF_Stage IF(.clk(CLOCK_50), .rst(SW[0]), .Br_taken(EXE_Br_taken) , .Br_Addr(EXE_Br_Addr), .Freeze(Freeze || ~ready),.PC(pc_IF), .Instruction(instruction));
+IF_Stage_reg IF_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .PC_in(pc_IF), .Instruction_in(instruction), .Freeze(Freeze || ~ready), .PC(pc_ID), .Instruction(instruction_out));
 
 Hazard_Detection_Unit hazard_detection(.src1(instruction_out[25:21]), .src2(instruction_out[20:16]), .Exe_Dest(EXE_Dest),
 																		.Exe_WB_EN(EXE_WB_EN), .Mem_Dest(MEM_Dest), .Mem_WB_EN(MEM_WB_EN),
@@ -380,7 +380,8 @@ ID_Stage ID(.clk(CLOCK_50), .rst(SW[0]), .Instruction(instruction_out), .WB_Writ
 				.src1(ID_src1), .src2(ID_src2));
 ID_Stage_reg ID_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .Dest_in(ID_Dest), .Reg2_in(ID_Reg2), .Val2_in(ID_Val2), .Val1_in(ID_Val1),
 										.PC_in(pc_ID), .EXE_CMD_in(ID_EXE_CMD), .MEM_R_EN_in(ID_MEM_R_EN), .MEM_W_EN_in(ID_MEM_W_EN),
-										.WB_EN_in(ID_WB_EN), .Branch_Type_in(ID_Branch_Type), .is_imm_in(is_immediate), .src1_in(ID_src1), .src2_in(ID_src2),
+										.WB_EN_in(ID_WB_EN), .Branch_Type_in(ID_Branch_Type), .is_imm_in(is_immediate),
+										.src1_in(ID_src1), .src2_in(ID_src2), .Freeze(~ready),
 										.Dest(EXE_Dest), .Reg2(EXE_Reg2), .Val2(EXE_Val2), .Val1(EXE_Val1),
 										.PC_out(pc_EXE), .EXE_CMD(EXE_EXE_CMD), .MEM_R_EN(EXE_MEM_R_EN), .MEM_W_EN(EXE_MEM_W_EN),
 										.WB_EN(EXE_WB_EN), .Branch_Type(EXE_Branch_Type), .is_imm(is_immediate2), .src1(EXE_src1), .src2(EXE_src2));
@@ -391,16 +392,20 @@ EXE_Stage EXE(.clk(CLOCK_50), .EXE_CMD(EXE_EXE_CMD), .val1(EXE_Val1), .val2(EXE_
 EXE_Stage_reg EXE_reg(.clk(CLOCK_50), .rst(SW[0]), .WB_en_in(EXE_WB_EN),
 											.MEM_R_EN_in(EXE_MEM_R_EN), .MEM_W_EN_in(EXE_MEM_W_EN),
 											.PC_in(pc_EXE), .ALU_result_in(EXE_ALU_result),
-											.ST_val_in(EXE_Reg2), .Dest_in(EXE_Dest), .WB_en(MEM_WB_EN),
+											.ST_val_in(EXE_Reg2), .Dest_in(EXE_Dest), .Freeze(~ready),
+											.WB_en(MEM_WB_EN),
 											.MEM_R_EN(MEM_MEM_R_EN), .MEM_W_EN(MEM_MEM_W_EN), .PC(pc_MEM),
 											.ALU_result(MEM_ALU_result), .ST_val(ST_val), .Dest(MEM_Dest));
 
-MEM_Stage MEM(.clk(CLOCK_50), .MEM_R_EN_in(MEM_MEM_R_EN),
+MEM_Stage MEM(.clk(CLOCK_50), .rst(SW[0]), .MEM_R_EN_in(MEM_MEM_R_EN),
 							.MEM_W_EN_in(MEM_MEM_W_EN), .ALU_result_in(MEM_ALU_result),
-							.ST_val(ST_val), .Mem_read_value(MEM_Mem_read_value));
+							.ST_val(ST_val), .Mem_read_value(MEM_Mem_read_value),
+							.ready(ready), .SRAM_DQ(SRAM_DQ), .SRAM_ADDR(SRAM_ADDR),
+							.SRAM_UB_N(SRAM_UB_N), .SRAM_LB_N(SRAM_LB_N), .SRAM_WE_N(SRAM_WE_N),
+							.SRAM_CE_N(SRAM_CE_N), .SRAM_OE_N(SRAM_CE_N));
 MEM_Stage_reg MEM_reg(.clk(CLOCK_50), .rst(SW[0]), .WB_en_in(MEM_WB_EN),
 										  .MEM_R_EN_in(MEM_MEM_R_EN), .ALU_result_in(MEM_ALU_result),
-											.Mem_read_value_in(MEM_Mem_read_value), .Dest_in(MEM_Dest),
+											.Mem_read_value_in(MEM_Mem_read_value), .Dest_in(MEM_Dest), .Freeze(~ready),
 											.WB_en(WB_WB_en), .MEM_R_EN(WB_MEM_R_EN),
 											.ALU_result(WB_ALU_result), .Mem_read_value(WB_Mem_read_value),
 											.Dest(WB_Dest));

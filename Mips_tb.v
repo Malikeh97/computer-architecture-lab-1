@@ -28,14 +28,15 @@ module Mips_tb;
 	// Inputs
 	reg clk;
 	reg rst;
-
+	reg forward_en;
 	// Instantiate the Unit Under Test (UUT)
-	MIPS mips(.CLOCK_50(clk), .SW({17'b0, rst}));
+	MIPS mips(.CLOCK_50(clk), .SW({14'b0, forward_en, 2'b00, rst}));
 
 
 	initial begin
 		clk = 0;
 		rst = 0;
+		forward_en = 1;
 
     #100 rst = 1;
     repeat(2) #100 clk = ~clk;
