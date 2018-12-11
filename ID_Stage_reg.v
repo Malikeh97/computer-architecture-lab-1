@@ -43,6 +43,8 @@ always @(posedge clk) begin
 		WB_EN <= 1'b0;
 		Branch_Type <= 2'b0;
 		is_imm <= 1'b0;
+		src1 <= 5'b0;
+		src2 <= 5'b0;
 	end
 	else begin
 		Dest <= Dest_in;
@@ -56,6 +58,8 @@ always @(posedge clk) begin
 		WB_EN <= WB_EN_in;
 		Branch_Type <= Branch_Type_in;
 		is_imm <= is_imm_in;
+		src1 <= src1_in;
+		src2 <= src2_in;
 	end
 end
 
