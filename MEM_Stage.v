@@ -21,11 +21,11 @@ wire[31:0] mapped_addr;
 
 Addr_Map addr_map(.ALU_result_in(ALU_result_in), .mapped_addr(mapped_addr));
 
-module Sram_Controller(.clk(clk), .rst(rst), .wr_en(MEM_W_EN_in), .rd_en(MEM_R_EN_in),
+Sram_Controller sram_controller(.clk(clk), .rst(rst), .wr_en(MEM_W_EN_in), .rd_en(MEM_R_EN_in),
                        .address(mapped_addr), .writeData(ST_val), .readData(Mem_read_value),
                        .ready(ready), .SRAM_DQ(SRAM_DQ), .SRAM_ADDR(SRAM_ADDR),
                        .SRAM_UB_N(SRAM_UB_N), .SRAM_LB_N(SRAM_LB_N), .SRAM_WE_N(SRAM_WE_N),
-                       .SRAM_CE_N(SRAM_CE_N), .SRAM_OE_N(SRAM_CE_N));
+                       .SRAM_CE_N(SRAM_CE_N), .SRAM_OE_N(SRAM_OE_N));
 
 // DataMemory datamemory(.clk(clk), .MEM_R_EN_in(MEM_R_EN_in), .MEM_W_EN_in(MEM_W_EN_in),
                       // .mapped_addr(mapped_addr), .ST_val(ST_val), .Mem_read_value(Mem_read_value));

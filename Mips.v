@@ -315,7 +315,7 @@ wire[31:0] instruction_out;
 
 reg[6:0] sevenSeg[15:0];
 
-wire ID_WB_Write_Enable1;
+wire ID_WB_Write_Enable;
 wire[4:0] ID_WB_Dest;
 wire[31:0] ID_WB_Data;
 wire[4:0] ID_Dest, EXE_Dest, MEM_Dest, WB_Dest;
@@ -402,7 +402,7 @@ MEM_Stage MEM(.clk(CLOCK_50), .rst(SW[0]), .MEM_R_EN_in(MEM_MEM_R_EN),
 							.ST_val(ST_val), .Mem_read_value(MEM_Mem_read_value),
 							.ready(ready), .SRAM_DQ(SRAM_DQ), .SRAM_ADDR(SRAM_ADDR),
 							.SRAM_UB_N(SRAM_UB_N), .SRAM_LB_N(SRAM_LB_N), .SRAM_WE_N(SRAM_WE_N),
-							.SRAM_CE_N(SRAM_CE_N), .SRAM_OE_N(SRAM_CE_N));
+							.SRAM_CE_N(SRAM_CE_N), .SRAM_OE_N(SRAM_OE_N));
 MEM_Stage_reg MEM_reg(.clk(CLOCK_50), .rst(SW[0]), .WB_en_in(MEM_WB_EN),
 										  .MEM_R_EN_in(MEM_MEM_R_EN), .ALU_result_in(MEM_ALU_result),
 											.Mem_read_value_in(MEM_Mem_read_value), .Dest_in(MEM_Dest), .Freeze(~ready),
