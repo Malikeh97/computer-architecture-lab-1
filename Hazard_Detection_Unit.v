@@ -21,7 +21,7 @@ always @ ( * ) begin
     else if ((src2 == Exe_Dest && (!is_immediate || (is_immediate && (MEM_W_EN || (Branch_Type == 2'b10)))) && Exe_WB_EN && Exe_Dest != 0) || (src2 == Mem_Dest && (!is_immediate || (is_immediate && (MEM_W_EN || (Branch_Type == 2'b10)))) && Mem_WB_EN && Mem_Dest != 0))
       hazard_detected <= 1'b1;
   end
-  if (((src2 == Exe_Dest && (is_immediate && MEM_R_EN)) && Exe_WB_EN && Exe_Dest != 0) || ((src2 == Mem_Dest && (is_immediate && MEM_R_EN)) && Mem_WB_EN && Mem_Dest != 0))
+  if (((src2 == Exe_Dest && MEM_R_EN) && Exe_WB_EN && Exe_Dest != 0) || ((src2 == Mem_Dest && MEM_R_EN) && Mem_WB_EN && Mem_Dest != 0))
     hazard_detected <= 1'b1;
 end
 endmodule
