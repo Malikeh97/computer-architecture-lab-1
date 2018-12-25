@@ -27,6 +27,7 @@ assign SRAM_DQ = (wr_en  == 1) ? DQ : 16'bzzzzzzzzzzzzzzzz;
 
 always@(posedge clk) begin
   if(rst) begin
+	 SRAM_WE_N <= 1'b1;
     DQ <= 16'bzzzzzzzzzzzzzzzz;
     counter <= 3'd0 ;
   end
@@ -69,9 +70,11 @@ always@(posedge clk) begin
 		counter <= counter + 1;
     end
     else if(counter == 3'd2 || counter == 3'd3 || counter == 3'd4)  begin
+		SRAM_WE_N <= 1'b1;
       counter <= counter + 1;
     end
     else if(counter == 3'd5) begin
+	 SRAM_WE_N <= 1'b1;
       counter <= 0;
     end
   end
