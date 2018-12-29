@@ -27,10 +27,12 @@ always @ ( * ) begin
     else if (src1 == WB_Dest && WB_WB_EN && WB_Dest != 0)
       sel1 <= 2'b10;
 
-    if ((src2 == Mem_Dest && (!is_immediate || (is_immediate && (MEM_W_EN || (Branch_Type == 2'b10)))) && Mem_WB_EN && Mem_Dest != 0))
-      sel2 <= 2'b01;
-    else if ((src2 == WB_Dest && (!is_immediate || (is_immediate && (MEM_W_EN || (Branch_Type == 2'b10)))) && WB_WB_EN && WB_Dest != 0))
-      sel2 <= 2'b10;
+    if (is_immediate == 0) begin
+      if ((src2 == Mem_Dest && Mem_WB_EN && Mem_Dest != 0))
+        sel2 <= 2'b01;
+      else if ((src2 == WB_Dest && WB_WB_EN && WB_Dest != 0))
+        sel2 <= 2'b10;
+    end
 
     if((Exe_Dest == Mem_Dest && Mem_WB_EN && Mem_Dest != 0))
       sel3 <= 2'b01;
