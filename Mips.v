@@ -45,7 +45,7 @@
 //   V1.5 :| Eko    Yan        :| 12/01/30  :|      Update to version 11.1 sp1.
 // ============================================================================
 
-module MIPS
+module Mips
 	(
 		////////////////////	Clock Input	 	////////////////////
 		CLOCK_27,						//	27 MHz
@@ -313,8 +313,6 @@ wire[31:0] pc_WB2;
 wire[31:0] instruction;
 wire[31:0] instruction_out;
 
-reg[6:0] sevenSeg[15:0];
-
 wire ID_WB_Write_Enable;
 wire[4:0] ID_WB_Dest;
 wire[31:0] ID_WB_Data;
@@ -341,25 +339,6 @@ wire[1:0] branch_type;
 wire[1:0] sel1, sel2, sel3;
 
 wire[4:0] ID_src1, ID_src2, EXE_src1, EXE_src2;
-
-initial begin
-	sevenSeg[0] = 7'b1000000;
-	sevenSeg[1] = 7'b1111001;
-	sevenSeg[2] = 7'b0100100;
-	sevenSeg[3] = 7'b0110000;
-	sevenSeg[4] = 7'b0011001;
-	sevenSeg[5] = 7'b0010010;
-	sevenSeg[6] = 7'b0000010;
-	sevenSeg[7] = 7'b1111000;
-	sevenSeg[8] = 7'b0000000;
-	sevenSeg[9] = 7'b0010000;
-	sevenSeg[10] = 7'b0001000;
-	sevenSeg[11] = 7'b0000011;
-	sevenSeg[12] = 7'b1000110;
-	sevenSeg[13] = 7'b0100001;
-	sevenSeg[14] = 7'b0000110;
-	sevenSeg[15] = 7'b0001110;
-end
 
 IF_Stage IF(.clk(CLOCK_50), .rst(SW[0]), .Br_taken(EXE_Br_taken) , .Br_Addr(EXE_Br_Addr), .Freeze(Freeze || ~ready),.PC(pc_IF), .Instruction(instruction));
 IF_Stage_reg IF_reg(.clk(CLOCK_50), .rst(SW[0]), .Flush(EXE_Br_taken), .PC_in(pc_IF), .Instruction_in(instruction), .Freeze(Freeze || ~ready), .PC(pc_ID), .Instruction(instruction_out));

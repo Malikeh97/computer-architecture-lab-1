@@ -17,13 +17,21 @@ module MEM_Stage(
 );
 
 wire[31:0] mapped_addr;
-
+wire[31:0] sram_address;
+wire[31:0] sram_wdata;
+wire[63:0] sram_rdata;
+wire sram_ready, cache_hit;
 
 Addr_Map addr_map(.ALU_result_in(ALU_result_in), .mapped_addr(mapped_addr));
 
+cache_controller cache_ctrl(.clk(clk), .rst(rst), .address(mapped_addr), .wdata(ST_val),
+                       .MEM_R_EN(MEM_R_EN_in), .MEM_W_EN(MEM_W_EN_in), .rdata(Mem_read_value),
+                       .ready(ready), .cache_hit(cache_hit), .sram_address(sram_address), .sram_wdata(sram_wdata), .sram_rdata(sram_rdata),
+                       .sram_ready(sram_ready));
+
 Sram_Controller sram_controller(.clk(clk), .rst(rst), .wr_en(MEM_W_EN_in), .rd_en(MEM_R_EN_in),
-                       .address(mapped_addr), .writeData(ST_val), .readData(Mem_read_value),
-                       .ready(ready), .SRAM_DQ(SRAM_DQ), .SRAM_ADDR(SRAM_ADDR),
+                       .address(sram_address), .writeData(sram_wdata), .cache_hit(cache_hit), .readData(sram_rdata),
+                       .ready(sram_ready), .SRAM_DQ(SRAM_DQ), .SRAM_ADDR(SRAM_ADDR),
                        .SRAM_UB_N(SRAM_UB_N), .SRAM_LB_N(SRAM_LB_N), .SRAM_WE_N(SRAM_WE_N),
                        .SRAM_CE_N(SRAM_CE_N), .SRAM_OE_N(SRAM_OE_N));
 

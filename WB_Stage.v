@@ -10,7 +10,7 @@ module WB_Stage(
   output[4:0] Dest
 );
 
-assign WB_en = MEM_R_EN && ALU_result >= 1280 ? 1'b0 : WB_en_in;
+assign WB_en = WB_en_in;
 assign Write_value = MEM_R_EN ? Mem_read_value : ALU_result;
 assign Dest = Dest_in;
 

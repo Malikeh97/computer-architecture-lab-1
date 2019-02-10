@@ -78,7 +78,7 @@ initial begin
 	ROM[63] <= 32'b10101000000000001111111111111111;
 end
 
-always  @(posedge clk)begin
+always @(posedge clk)begin
 	if(rst) pc <= 32'b0;
 	else if (Freeze == 0) pc <= Br_taken ? Br_Addr: pc + 32'd4;
 end
